@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import PageShell from '../components/PageShell';
+import PageShell from '../components/layout/PageShell';
 import { useApplication } from '../context/ApplicationContext';
 import { LOAN_TYPES, estimateEMI, formatINR, MOCK_USER } from '../data/mockData';
 

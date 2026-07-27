@@ -1,5 +1,7 @@
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import { HashRouter, Navigate, Routes, Route, useLocation } from 'react-router-dom';
 import { ApplicationProvider } from './context/ApplicationContext';
+import RouteTransition from './components/motion/RouteTransition';
 
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -12,11 +14,13 @@ import EligibilityResult from './pages/EligibilityResult';
 import Submit from './pages/Submit';
 import Confirmation from './pages/Confirmation';
 
-export default function App() {
+function AppRoutes() {
+  const location = useLocation();
+
   return (
-    <ApplicationProvider>
-      <HashRouter>
-        <Routes>
+    <AnimatePresence mode="wait">
+      <RouteTransition key={location.pathname}>
+        <Routes location={location}>
           <Route path="/" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/apply" element={<ApplyLoan />} />
@@ -27,7 +31,18 @@ export default function App() {
           <Route path="/eligibility" element={<EligibilityResult />} />
           <Route path="/submit" element={<Submit />} />
           <Route path="/confirmation" element={<Confirmation />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+      </RouteTransition>
+    </AnimatePresence>
+  );
+}
+
+export default function App() {
+  return (
+    <ApplicationProvider>
+      <HashRouter>
+        <AppRoutes />
       </HashRouter>
     </ApplicationProvider>
   );

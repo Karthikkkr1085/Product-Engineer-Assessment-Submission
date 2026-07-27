@@ -1,78 +1,18 @@
 import { useNavigate } from 'react-router-dom';
-import PageShell from '../components/PageShell';
+import PageShell from '../components/layout/PageShell';
+import FormField from '../components/shared/FormField';
+import PageHeader from '../components/shared/PageHeader';
+import { Input } from '../components/ui/input';
+import { MotionButton } from '../components/ui/motion-button';
 import { useApplication } from '../context/ApplicationContext';
 
 export default function PersonalInfo() {
   const navigate = useNavigate();
   const { application, updateNested } = useApplication();
-  const p = application.personal;
+  const personal = application.personal;
+  const updatePersonal = (field) => (event) => updateNested('personal', { [field]: event.target.value });
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    navigate('/employment');
-  }
+  function handleSubmit(event) { event.preventDefault(); navigate('/employment'); }
 
-  return (
-    <PageShell step={5}>
-      <div className="eyebrow">Step 3 of 5 · Personal information</div>
-      <h1 style={{ fontSize: 26 }}>Tell us about yourself</h1>
-      <p className="subhead">We use this to verify your identity. All fields are mocked for this prototype.</p>
-
-      <form onSubmit={handleSubmit}>
-        <div className="card">
-          <div className="field">
-            <label>Full legal name</label>
-            <input
-              type="text"
-              placeholder="As per PAN card"
-              value={p.fullName}
-              onChange={(e) => updateNested('personal', { fullName: e.target.value })}
-            />
-          </div>
-          <div className="field-row">
-            <div className="field">
-              <label>Date of birth</label>
-              <input
-                type="date"
-                value={p.dob}
-                onChange={(e) => updateNested('personal', { dob: e.target.value })}
-              />
-            </div>
-            <div className="field">
-              <label>PAN number</label>
-              <input
-                type="text"
-                placeholder="ABCDE1234F"
-                value={p.pan}
-                onChange={(e) => updateNested('personal', { pan: e.target.value })}
-              />
-            </div>
-          </div>
-          <div className="field">
-            <label>Mobile number</label>
-            <input
-              type="tel"
-              placeholder="+91 98XXXXXX00"
-              value={p.phone}
-              onChange={(e) => updateNested('personal', { phone: e.target.value })}
-            />
-          </div>
-          <div className="field">
-            <label>Residential address</label>
-            <input
-              type="text"
-              placeholder="Flat / street / city / pincode"
-              value={p.address}
-              onChange={(e) => updateNested('personal', { address: e.target.value })}
-            />
-          </div>
-        </div>
-
-        <div className="btn-row">
-          <button type="button" className="btn btn-secondary" onClick={() => navigate('/loan-details')}>← Back</button>
-          <button type="submit" className="btn btn-primary">Continue →</button>
-        </div>
-      </form>
-    </PageShell>
-  );
+  return <PageShell step={5}><PageHeader eyebrow="Step 3 of 5 · Personal information" title="Tell us about yourself" description="We use this to verify your identity. All fields are mocked for this prototype." /><form onSubmit={handleSubmit} className="space-y-6"><div className="card space-y-5"><FormField id="full-name" label="Full legal name"><Input id="full-name" type="text" placeholder="As per PAN card" value={personal.fullName} onChange={updatePersonal('fullName')} /></FormField><div className="field-row"><FormField id="date-of-birth" label="Date of birth"><Input id="date-of-birth" type="date" value={personal.dob} onChange={updatePersonal('dob')} /></FormField><FormField id="pan" label="PAN number"><Input id="pan" type="text" placeholder="ABCDE1234F" value={personal.pan} onChange={updatePersonal('pan')} /></FormField></div><FormField id="phone" label="Mobile number"><Input id="phone" type="tel" placeholder="+91 98XXXXXX00" value={personal.phone} onChange={updatePersonal('phone')} /></FormField><FormField id="address" label="Residential address"><Input id="address" type="text" placeholder="Flat / street / city / pincode" value={personal.address} onChange={updatePersonal('address')} /></FormField></div><div className="flex items-center justify-between gap-3"><MotionButton type="button" variant="outline" onClick={() => navigate('/loan-details')}>Back</MotionButton><MotionButton type="submit">Continue</MotionButton></div></form></PageShell>;
 }

@@ -1,74 +1,42 @@
+import { ArrowLeft, ArrowRight, CalendarClock, IndianRupee, ReceiptText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import PageShell from '../components/PageShell';
+import PageShell from '../components/layout/PageShell';
+import LoanControl from '../components/loan/LoanControl';
+import LoanMetric from '../components/loan/LoanMetric';
+import AnimatedNumber from '../components/motion/AnimatedNumber';
+import PageHeader from '../components/shared/PageHeader';
+import { MotionButton } from '../components/ui/motion-button';
 import { useApplication } from '../context/ApplicationContext';
-import { LOAN_TYPES, estimateEMI, formatINR } from '../data/mockData';
+import { LOAN_TYPES, estimateEMI } from '../data/mockData';
 
 export default function LoanDetails() {
   const navigate = useNavigate();
   const { application, updateApplication } = useApplication();
-  const loanType = LOAN_TYPES.find((l) => l.id === application.loanTypeId) || LOAN_TYPES[0];
+  const loanType = LOAN_TYPES.find((loan) => loan.id === application.loanTypeId) || LOAN_TYPES[0];
   const emi = estimateEMI(application.amount, loanType.rate, application.tenureMonths);
+  const amountProgress = ((application.amount - 50000) / 1450000) * 100;
+  const tenureProgress = ((application.tenureMonths - 12) / 48) * 100;
 
   return (
     <PageShell step={4}>
-      <div className="eyebrow">Step 2 of 5 · Loan details</div>
-      <h1 style={{ fontSize: 26 }}>How much do you need?</h1>
-      <p className="subhead">Adjust the amount and repayment period. Your estimated EMI updates as you go.</p>
-
-      <div className="card">
-        <div className="slider-block">
-          <div className="hint" style={{ marginBottom: 6 }}>Loan amount</div>
-          <div className="slider-amount">{formatINR(application.amount)}</div>
-          <input
-            type="range"
-            min="50000"
-            max="1500000"
-            step="10000"
-            value={application.amount}
-            onChange={(e) => updateApplication({ amount: Number(e.target.value) })}
-          />
-          <div className="slider-labels">
-            <span>₹50,000</span>
-            <span>₹15,00,000</span>
-          </div>
-        </div>
-
-        <div className="slider-block">
-          <div className="hint" style={{ marginBottom: 6 }}>Repayment tenure</div>
-          <div className="slider-amount">{application.tenureMonths} months</div>
-          <input
-            type="range"
-            min="12"
-            max="60"
-            step="6"
-            value={application.tenureMonths}
-            onChange={(e) => updateApplication({ tenureMonths: Number(e.target.value) })}
-          />
-          <div className="slider-labels">
-            <span>12 mo</span>
-            <span>60 mo</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="stat-grid">
-        <div className="stat-box">
-          <div className="label">Interest rate</div>
-          <div className="value">{loanType.rate}%</div>
-        </div>
-        <div className="stat-box">
-          <div className="label">Estimated EMI</div>
-          <div className="value">{formatINR(emi)}</div>
-        </div>
-        <div className="stat-box">
-          <div className="label">Total payable</div>
-          <div className="value">{formatINR(emi * application.tenureMonths)}</div>
-        </div>
-      </div>
-
-      <div className="btn-row">
-        <button className="btn btn-secondary" onClick={() => navigate('/apply')}>← Back</button>
-        <button className="btn btn-primary" onClick={() => navigate('/personal-info')}>Continue →</button>
+      <PageHeader eyebrow="Step 2 of 5 · Loan details" title="How much do you need?" description="Adjust the amount and repayment period. Your estimated EMI updates as you go." />
+      <section className="loan-card" aria-label="Loan configuration">
+        <LoanControl label="Loan amount" value={<>₹<AnimatedNumber value={application.amount} /></>} minLabel="₹50,000" maxLabel="₹15,00,000">
+          <input className="premium-slider" style={{ '--range-progress': `${amountProgress}%` }} type="range" min="50000" max="1500000" step="10000" value={application.amount} aria-label="Loan amount" onChange={(event) => updateApplication({ amount: Number(event.target.value) })} />
+        </LoanControl>
+        <div className="loan-divider" />
+        <LoanControl label="Repayment tenure" value={<><AnimatedNumber value={application.tenureMonths} /> months</>} minLabel="12 months" maxLabel="60 months">
+          <input className="premium-slider" style={{ '--range-progress': `${tenureProgress}%` }} type="range" min="12" max="60" step="6" value={application.tenureMonths} aria-label="Repayment tenure in months" onChange={(event) => updateApplication({ tenureMonths: Number(event.target.value) })} />
+        </LoanControl>
+      </section>
+      <section className="metric-grid" aria-label="Loan estimates">
+        <LoanMetric icon={ReceiptText} label="Interest rate" value={<><AnimatedNumber value={loanType.rate} round={false} format={(value) => value.toFixed(2)} />%</>} helper="Annual percentage rate" />
+        <LoanMetric icon={IndianRupee} label="Estimated EMI" value={<>₹<AnimatedNumber value={emi} /></>} helper="Estimated monthly payment" />
+        <LoanMetric icon={CalendarClock} label="Total payable" value={<>₹<AnimatedNumber value={emi * application.tenureMonths} /></>} helper={`Over ${application.tenureMonths} months`} />
+      </section>
+      <div className="mt-7 flex items-center justify-between gap-3">
+        <MotionButton type="button" variant="outline" onClick={() => navigate('/apply')}><ArrowLeft aria-hidden="true" />Back</MotionButton>
+        <MotionButton type="button" onClick={() => navigate('/personal-info')}>Continue<ArrowRight aria-hidden="true" /></MotionButton>
       </div>
     </PageShell>
   );

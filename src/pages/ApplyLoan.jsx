@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import PageShell from '../components/PageShell';
+import PageShell from '../components/layout/PageShell';
 import { useApplication } from '../context/ApplicationContext';
 import { LOAN_TYPES } from '../data/mockData';
 
@@ -17,17 +17,19 @@ export default function ApplyLoan() {
 
       <div className="option-grid">
         {LOAN_TYPES.map((lt) => (
-          <div
+          <button
+            type="button"
             key={lt.id}
             className={'option-card' + (application.loanTypeId === lt.id ? ' selected' : '')}
             onClick={() => updateApplication({ loanTypeId: lt.id })}
+            aria-pressed={application.loanTypeId === lt.id}
           >
             <div className="title">{lt.title}</div>
             <div className="desc">{lt.desc}</div>
             <div className="desc tabular" style={{ marginTop: 8, color: 'var(--brass-deep)', fontWeight: 600 }}>
               from {lt.rate}% p.a.
             </div>
-          </div>
+          </button>
         ))}
       </div>
 

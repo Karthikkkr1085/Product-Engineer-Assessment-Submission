@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import PageShell from '../components/PageShell';
+import { useEffect, useRef, useState } from 'react';
+import PageShell from '../components/layout/PageShell';
 import { useApplication } from '../context/ApplicationContext';
 import { LOAN_TYPES, estimateEMI, formatINR } from '../data/mockData';
 
@@ -9,13 +9,19 @@ export default function Submit() {
   const { application } = useApplication();
   const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const submitTimeoutRef = useRef(null);
   const loanType = LOAN_TYPES.find((l) => l.id === application.loanTypeId) || LOAN_TYPES[0];
   const emi = estimateEMI(application.amount, loanType.rate, application.tenureMonths);
 
+  useEffect(() => () => {
+    if (submitTimeoutRef.current) clearTimeout(submitTimeoutRef.current);
+  }, []);
+
   function handleSubmit() {
+    if (!consent || submitting) return;
     setSubmitting(true);
     // simulated processing delay for the prototype
-    setTimeout(() => navigate('/confirmation'), 1400);
+    submitTimeoutRef.current = setTimeout(() => navigate('/confirmation'), 1400);
   }
 
   return (

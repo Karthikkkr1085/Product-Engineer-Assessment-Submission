@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import PageShell from '../components/PageShell';
+import PageShell from '../components/layout/PageShell';
 import { MOCK_USER, ACCOUNT_SUMMARY, formatINR } from '../data/mockData';
 
 export default function Dashboard() {
