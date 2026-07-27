@@ -1,9 +1,17 @@
-# Horizon — Personal Loan Application Prototype
+# Personal Loan Application Prototype
 
 A clickable front-end prototype of a retail bank's personal loan application journey, built for the Finovrr Product Engineer Assessment (Part 1).
 
 **Live customer journey (10 screens):**
 Login → Dashboard → Apply for Loan → Loan Details → Personal Info → Employment & Income → Review Application → Eligibility Result → Submit → Confirmation
+
+## Demo
+
+**GitHub Repository:**  
+https://github.com/Karthikkkr1085/Product-Engineer-Assessment-Submission
+
+> The application is a frontend-only prototype built for the Finovrr Product Engineer Assessment.
+
 
 ## Design concept — "The Running Ledger"
 
@@ -13,32 +21,122 @@ Instead of a generic step wizard, the prototype frames the application as a bank
 - **Color:** deep navy ink, cool paper background, a muted brass accent for primary actions and approvals, emerald for the eligibility decision.
 - **No backend, database, APIs, or real authentication** — all data is mocked in `src/data/mockData.js` and application state is held in React Context (`src/context/ApplicationContext.jsx`) for the duration of the session only.
 
-## Tech stack
+## Tech Stack
 
-- React 18 + Vite
-- react-router-dom (HashRouter, so it also works from a static file server / GitHub Pages without server-side routing config)
-- Plain CSS with design tokens (no UI framework) — see `src/index.css`
+| Category | Technologies |
+|----------|--------------|
+| Frontend | React 18, Vite |
+| Routing | React Router DOM |
+| Styling | Tailwind CSS v4, CSS3 |
+| UI Components | shadcn/ui |
+| Animations | Framer Motion |
+| Icons | Lucide React |
+| State Management | React Context API |
+| Language | JavaScript (ES6+) |
+| Build Tool | Vite |
 
-## Running locally
+## Features
 
-```bash
-npm install
-npm run dev
-```
+- Premium fintech-inspired UI
+- Responsive design for desktop and mobile
+- Glassmorphism visual design
+- Smooth page transitions with Framer Motion
+- Animated dashboard metrics
+- Multi-step loan application journey
+- Dynamic EMI calculation
+- Live application progress tracking
+- Accessible UI components
+- Reusable component architecture
+- Mock authentication flow
+- In-memory state management with React Context
 
-Then open the printed local URL (typically `http://localhost:5173`). Log in with anything — the login form accepts any input.
 
-## Project structure
+## Project Structure
 
 ```
 src/
-  components/     LedgerRail, PageShell (layout shell used by every screen)
-  context/        ApplicationContext — in-memory state for the loan application
-  data/           mockData.js (users, loan types, EMI calculator), steps.js (journey config)
-  pages/          one component per screen in the journey
+├── components/
+│   ├── auth/
+│   ├── dashboard/
+│   ├── layout/
+│   ├── loan/
+│   ├── motion/
+│   ├── shared/
+│   └── ui/
+├── context/
+├── data/
+├── lib/
+├── pages/
+├── styles/
+└── utils/
 ```
+
+## Running Locally
+
+### Clone the repository
+
+```bash
+git clone https://github.com/Karthikkkr1085/Product-Engineer-Assessment-Submission.git
+cd Product-Engineer-Assessment-Submission
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Start the development server
+
+```bash
+npm run dev
+```
+
+Open your browser and visit:
+
+```
+http://localhost:5173
+```
+## Production Build
+
+Build the application:
+
+```bash
+npm run build
+```
+
+Preview the production build:
+
+```bash
+npm run preview
+```
+## Screenshots
+
+| Login | Dashboard |
+|-------|-----------|
+| ![](./screenshots/login.png) | ![](./screenshots/dashboard.png) |
+
+| Loan Details | Personal Information |
+|--------------|----------------------|
+| ![](./screenshots/loan-details.png) | ![](./screenshots/personal-info.png) |
+
+| Review | Eligibility |
+|--------|-------------|
+| ![](./screenshots/review.png) | ![](./screenshots/eligibility.png) |
+
+| Submit | Confirmation |
+|--------|--------------|
+| ![](./screenshots/submit.png) | ![](./screenshots/confirmation.png) |
+
+| Loan Amount | Eligibility Result |
+|-------------|--------------------|
+| ![](./screenshots/amount.png) | ![](./screenshots/eligible-result.png) |
+
 
 ## Notes
 
-- EMI is calculated with a standard reducing-balance formula (`estimateEMI` in `mockData.js`) for realism, but no real underwriting logic is implied — the "eligibility" decision is always approved for demonstration purposes.
-- Built with AI-assisted development (Claude) for both the design system and component implementation.
+- Frontend prototype only (no backend integration).
+- Authentication is mocked for demonstration.
+- Loan calculations are simulated for UI purposes.
+- Application state is maintained using React Context.
+- Built as part of the Finovrr Product Engineer Assessment.
